@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: combined-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: combined
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: combined
+    spec:
+      containers:
+      - name: frontend
+        image: badawyx/cloud_project:v1
+        ports:
+        - containerPort: 3000
+        command: ["npm", "run", "start"]
+      - name: backend
+        image: badawyx/cloud_project:v2
+        ports:
+        - containerPort: 3001
+        command: ["npm", "run", "start"]
+      - name: nginx
+        image: badawyx/my-nginx-image:latest
+        ports:
+        - containerPort: 80
